@@ -91,4 +91,9 @@ def detect_build_system(project_directory: Path) -> PythonBuildSystem | None:
 
         return PoetryPythonBuildSystem(project_directory)
 
+    if "maturin" in pyproject_content:
+        from .maturin import MaturinPythonBuildSystem
+
+        return MaturinPythonBuildSystem(project_directory)
+
     return None

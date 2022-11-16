@@ -8,6 +8,7 @@ import shutil
 import subprocess as sp
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from typing import List
 
 from kraken.core.util.helpers import NotSet
 from kraken.core.util.path import is_relative_to
@@ -53,6 +54,12 @@ class PoetryPythonBuildSystem(PythonBuildSystem):
                 if code != 0:
                     raise RuntimeError(f"command {safe_command!r} failed with exit code {code}")
 
+    def build_command(self) -> List[str]:
+        return ["poetry", "build"]
+
+    def dist_dir(self) -> Path:
+        return self.project_directory / "dist"
+
     def build(self, output_directory: Path, as_version: str | None = None) -> list[Path]:
         if as_version is not None:
             # TODO (@NiklasRosenstein): We should find a way to revert the changes to the worktree
@@ -63,11 +70,11 @@ class PoetryPythonBuildSystem(PythonBuildSystem):
 
         # Poetry does not allow configuring the output folder, so it's always going to be "dist/".
         # We remove the contents of that folder to make sure we know what was produced.
-        dist_dir = self.project_directory / "dist"
+        dist_dir = self.dist_dir()
         if dist_dir.exists():
             shutil.rmtree(dist_dir)
 
-        command = ["poetry", "build"]
+        command = self.build_command()
         logger.info("%s", command)
         sp.check_call(command, cwd=self.project_directory)
         src_files = list(dist_dir.iterdir())

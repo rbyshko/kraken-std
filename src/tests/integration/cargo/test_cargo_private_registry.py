@@ -148,6 +148,7 @@ CLOUDSMITH_VAR = "CLOUDSMITH_INTEGRATION_TEST_CREDENTIALS"
 
 
 @pytest.mark.skipif(ARTIFACTORY_VAR not in os.environ, reason=f"{ARTIFACTORY_VAR} is not set")
+@pytest.mark.xfail(reason="currently failing, see test artifactory is no longer active, see #32")
 def test__artifactory_cargo_publish_and_consume(tempdir: Path) -> None:
     credentials = json.loads(os.environ[ARTIFACTORY_VAR])
     repository = CargoRepositoryWithAuth(
