@@ -18,7 +18,7 @@ class IsortTask(EnvironmentAwareDispatchTask):
         command = ["isort", str(self.settings.source_directory)] + self.settings.get_tests_directory_as_args()
         command += [str(p) for p in self.additional_files.get()]
         if self.check_only.get():
-            command += ["--check-only"]
+            command += ["--check-only", "--diff"]
         if self.config_file.is_filled():
             command += ["--settings-file", str(self.config_file.get())]
         return command
