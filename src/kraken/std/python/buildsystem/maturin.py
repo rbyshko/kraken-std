@@ -34,7 +34,7 @@ class MaturinPythonBuildSystem(PoetryPythonBuildSystem):
         return MaturinManagedEnvironment(self.project_directory)
 
     def build_command(self) -> List[str]:
-        return ["poetry", "run", "maturin", "build"]
+        return ["poetry", "run", "maturin", "build", "--release"]
 
     def dist_dir(self) -> Path:
         return self.project_directory / "target" / "wheels"
