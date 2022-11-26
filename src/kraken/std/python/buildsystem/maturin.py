@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import logging
+import subprocess as sp
 from pathlib import Path
 from typing import List
 
-from .poetry import PoetryPythonBuildSystem
+from kraken.std.python.settings import PythonSettings
+
+from . import ManagedEnvironment
+from .poetry import PoetryManagedEnvironment, PoetryPythonBuildSystem
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +30,19 @@ class MaturinPythonBuildSystem(PoetryPythonBuildSystem):
 
     name = "Maturin"
 
+    def get_managed_environment(self) -> ManagedEnvironment:
+        return MaturinManagedEnvironment(self.project_directory)
+
     def build_command(self) -> List[str]:
         return ["poetry", "run", "maturin", "build"]
 
     def dist_dir(self) -> Path:
         return self.project_directory / "target" / "wheels"
+
+
+class MaturinManagedEnvironment(PoetryManagedEnvironment):
+    def install(self, settings: PythonSettings) -> None:
+        super(MaturinManagedEnvironment, self).install(settings)
+        command = ["poetry", "run", "maturin", "develop"]
+        logger.info("%s", command)
+        sp.check_call(command, cwd=self.project_directory)
