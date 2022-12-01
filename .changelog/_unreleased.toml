@@ -15,3 +15,9 @@ id = "0b415aeb-5dd1-42d5-b1bd-dbc0432532fb"
 type = "improvement"
 description = "have Maturin build in release mode instead of development mode"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "c24b5555-f691-4910-a259-fdc165e24aff"
+type = "improvement"
+description = "add `--diff` option when running `black --check`"
+author = "@NiklasRosenstein"
