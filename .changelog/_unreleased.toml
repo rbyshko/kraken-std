@@ -1,0 +1,5 @@
+[[entries]]
+id = "3b3a2872-0721-4aad-bb66-85a92412f201"
+type = "feature"
+description = "Add `cargo_fmt(all_packages)` parameter"
+author = "callumPearce"

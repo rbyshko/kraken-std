@@ -132,10 +132,14 @@ def cargo_clippy(
     return task
 
 
-def cargo_fmt(*, project: Project | None = None) -> None:
+def cargo_fmt(
+    *,
+    all_packages: bool = False, 
+    project: Project | None = None
+) -> None:
     project = project or Project.current()
-    project.do("cargoFmt", CargoFmtTask, group="fmt")
-    project.do("cargoFmtCheck", CargoFmtTask, group="lint", check=True)
+    project.do("cargoFmt", CargoFmtTask, all_packages=all_packages, group="fmt")
+    project.do("cargoFmtCheck", CargoFmtTask, all_packages=all_packages, group="lint", check=True)
 
 
 def cargo_bump_version(
