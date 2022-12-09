@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
+import subprocess
 from dataclasses import dataclass, fields
+from enum import Enum
 from pathlib import Path
 from typing import Any, List
 
@@ -18,6 +21,71 @@ class Bin:
 
     def to_json(self) -> dict[str, str]:
         return {"name": self.name, "path": self.path}
+
+
+# TODO: Differentiate between lib kinds?
+
+
+@dataclass
+class ArtifactKind(Enum):
+    BIN = 1
+    LIB = 2
+
+
+@dataclass
+class Artifact:
+    name: str
+    path: str
+    kind: ArtifactKind
+
+    def to_json(self) -> dict[str, str]:
+        return {"name": self.name, "path": self.path, "kind": str(self.kind)}
+
+
+@dataclass
+class WorkspaceMember:
+    id: str
+    name: str
+    version: str
+    edition: str
+    manifest_path: Path
+
+
+@dataclass
+class CargoMetadata:
+    _path: Path
+    _data: dict[str, Any]
+
+    workspaceMembers: list[WorkspaceMember]
+    artifacts: list[Artifact]
+
+    @classmethod
+    def read(cls, project_dir: Path) -> CargoMetadata:
+        result = subprocess.run(
+            ["cargo", "metadata", "--format-version=1", "--manifest-path", project_dir / "Cargo.toml"],
+            stdout=subprocess.PIPE,
+        )
+        return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
+
+    @classmethod
+    def of(cls, path: Path, data: dict[str, Any]) -> CargoMetadata:
+        workspace_members = []
+        artifacts = []
+        for package in data["packages"]:
+            id = package["id"]
+            if id in data["workspace_members"]:
+                workspace_members.append(
+                    WorkspaceMember(
+                        id, package["name"], package["version"], package["edition"], Path(package["manifest_path"])
+                    )
+                )
+                for target in package["targets"]:
+                    if "bin" in target["kind"]:
+                        artifacts.append(Artifact(target["name"], target["src_path"], ArtifactKind.BIN))
+                    elif "lib" in target["kind"]:
+                        artifacts.append(Artifact(target["name"], target["src_path"], ArtifactKind.LIB))
+
+        return cls(path, data, workspace_members, artifacts)
 
 
 @dataclass

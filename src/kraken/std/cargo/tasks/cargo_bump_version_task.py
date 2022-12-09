@@ -18,7 +18,7 @@ class CargoBumpVersionTask(BackgroundTask):
     version: Property[str]
     registry: Property[str]
     revert: Property[bool] = Property.default(False)
-    cargo_toml_file: Property[Path] = Property.default("Cargo.toml")
+    cargo_toml_file: Property[Path]
 
     def _get_updated_cargo_toml(self) -> str:
         manifest = CargoManifest.read(self.cargo_toml_file.get())

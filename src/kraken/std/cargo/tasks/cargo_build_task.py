@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import glob
 import os
 import shlex
 import subprocess as sp
@@ -8,9 +9,8 @@ from typing import Dict, List, Optional
 
 from kraken.core import Project, Property, Task, TaskStatus
 
+from kraken.std.cargo.manifest import CargoMetadata
 from kraken.std.descriptors.resource import BinaryArtifact
-
-from ..manifest import CargoManifest
 
 
 @dataclass
@@ -71,10 +71,14 @@ class CargoBuildTask(Task):
         if self.target.get_or(None) in ("debug", "release"):
             # Expose the output binaries that are produced by this task.
             # We only expect a binary to be built if the target is debug or release.
-            manifest = CargoManifest.read(self.project.directory / "Cargo.toml")
-            target_dir = self.project.directory / os.getenv("CARGO_TARGET_DIR", "target")
-            for bin in manifest.bin:
-                out_binaries.append(CargoBinaryArtifact(bin.name, target_dir / self.target.get() / bin.name))
+            manifest = CargoMetadata.read(self.project.directory)
+            target_dir = self.project.directory / os.getenv("CARGO_TARGET_DIR", "target") / self.target.get()
+            for binOrLib in manifest.artifacts:
+                # Hack to brute force copy multiple lib suffixes
+                filename = glob.glob(binOrLib.name + "*", root_dir=target_dir)  # type: ignore
+                for f in filename:
+                    out_binaries.append(CargoBinaryArtifact(binOrLib.name, target_dir / f))
+
         self.out_binaries.set(out_binaries)
 
         result = sp.call(command, cwd=self.project.directory, env={**os.environ, **env})
