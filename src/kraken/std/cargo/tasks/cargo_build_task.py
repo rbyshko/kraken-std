@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import glob
 import os
 import shlex
 import subprocess as sp
@@ -9,12 +8,17 @@ from typing import Dict, List, Optional
 
 from kraken.core import Project, Property, Task, TaskStatus
 
-from kraken.std.cargo.manifest import CargoMetadata
-from kraken.std.descriptors.resource import BinaryArtifact
+from kraken.std.cargo.manifest import ArtifactKind, CargoMetadata
+from kraken.std.descriptors.resource import BinaryArtifact, LibraryArtifact
 
 
 @dataclass
 class CargoBinaryArtifact(BinaryArtifact):
+    pass
+
+
+@dataclass
+class CargoLibraryArtifact(LibraryArtifact):
     pass
 
 
@@ -37,6 +41,9 @@ class CargoBuildTask(Task):
 
     #: An output property for the Cargo binaries that are being produced by this build.
     out_binaries: Property[List[CargoBinaryArtifact]] = Property.output()
+
+    #: An output property for the Cargo libraries that are being produced by this build.
+    out_libraries: Property[List[CargoLibraryArtifact]] = Property.output()
 
     def __init__(self, name: str, project: Project) -> None:
         super().__init__(name, project)
@@ -68,23 +75,30 @@ class CargoBuildTask(Task):
         self.logger.info("%s [env: %s]", safe_command, safe_env)
 
         out_binaries = []
+        out_libraries = []
         if self.target.get_or(None) in ("debug", "release"):
             # Expose the output binaries that are produced by this task.
             # We only expect a binary to be built if the target is debug or release.
             manifest = CargoMetadata.read(self.project.directory)
             target_dir = self.project.directory / os.getenv("CARGO_TARGET_DIR", "target") / self.target.get()
-            for binOrLib in manifest.artifacts:
+            for artifact in manifest.artifacts:
                 # Hack to brute force copy multiple lib suffixes
-                filename = glob.glob(binOrLib.name + "*", root_dir=target_dir)  # type: ignore
-                for f in filename:
-                    out_binaries.append(CargoBinaryArtifact(binOrLib.name, target_dir / f))
+                filenames = target_dir.glob(artifact.name + "*")
+                for f in filenames:
+                    if artifact.kind is ArtifactKind.BIN:
+                        out_binaries.append(CargoBinaryArtifact(artifact.name, target_dir / f))
+                    elif artifact.kind is ArtifactKind.LIB:
+                        out_libraries.append(CargoLibraryArtifact(artifact.name, target_dir / f))
 
         self.out_binaries.set(out_binaries)
+        self.out_libraries.set(out_libraries)
 
         result = sp.call(command, cwd=self.project.directory, env={**os.environ, **env})
 
         if result == 0:
             for out_bin in out_binaries:
                 assert out_bin.path.is_file(), out_bin
+            for out_lib in out_libraries:
+                assert out_lib.path.is_file(), out_lib
 
         return TaskStatus.from_exit_code(safe_command, result)

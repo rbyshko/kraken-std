@@ -19,6 +19,11 @@ class BinaryArtifact(Resource):
     """A subclass of a resource that represents a binary artifact."""
 
 
+@dataclass
+class LibraryArtifact(Resource):
+    """A subclass of a resource that represents a library artifact."""
+
+
 def resource(*, name: str, path: str | Path, project: Project | None = None) -> Resource:
     """Creates a task for the purpose of carrying a :class:`Resource` descriptor."""
 
