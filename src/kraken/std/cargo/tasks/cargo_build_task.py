@@ -86,9 +86,9 @@ class CargoBuildTask(Task):
                 filenames = target_dir.glob(artifact.name + "*")
                 for f in filenames:
                     if artifact.kind is ArtifactKind.BIN:
-                        out_binaries.append(CargoBinaryArtifact(artifact.name, target_dir / f))
+                        out_binaries.append(CargoBinaryArtifact(artifact.name, f))
                     elif artifact.kind is ArtifactKind.LIB:
-                        out_libraries.append(CargoLibraryArtifact(artifact.name, target_dir / f))
+                        out_libraries.append(CargoLibraryArtifact(artifact.name, f))
 
         self.out_binaries.set(out_binaries)
         self.out_libraries.set(out_libraries)
