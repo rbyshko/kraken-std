@@ -159,7 +159,7 @@ def cargo_bump_version(
 
     project = project or Project.current()
 
-    return project.do(
+    task = project.do(
         name,
         CargoBumpVersionTask,
         group=group,
@@ -168,6 +168,11 @@ def cargo_bump_version(
         registry=registry,
         cargo_toml_file=cargo_toml_file,
     )
+
+    if project.parent is not None:
+        task.add_relationship(f":{CARGO_BUILD_SUPPORT_GROUP_NAME}", inverse=True)
+
+    return task
 
 
 def cargo_build(

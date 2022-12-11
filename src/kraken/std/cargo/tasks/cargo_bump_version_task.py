@@ -61,8 +61,3 @@ class CargoBumpVersionTask(BackgroundTask):
             if revert
             else TaskStatus.succeeded(f"permanent bump to {version}")
         )
-
-    # Task
-
-    def finalize(self) -> None:
-        self.cargo_toml_file.set(self.cargo_toml_file.value.map(lambda path: self.project.directory / path))
