@@ -62,7 +62,7 @@ class CargoMetadata:
     @classmethod
     def read(cls, project_dir: Path) -> CargoMetadata:
         result = subprocess.run(
-            ["cargo", "metadata", "--format-version=1", "--manifest-path", project_dir / "Cargo.toml"],
+            ["cargo", "metadata", "--no-deps", "--format-version=1", "--manifest-path", project_dir / "Cargo.toml"],
             stdout=subprocess.PIPE,
         )
         return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
