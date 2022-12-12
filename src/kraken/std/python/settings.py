@@ -38,7 +38,7 @@ class PythonSettings:
         return the first that exists: `test/`, `tests/`, `src/test/`, `src/tests/`. The determined path will be
         relative to the project directory."""
 
-        if self.tests_directory:
+        if self.tests_directory and self.tests_directory.is_dir():
             return self.tests_directory
         for test_dir in map(Path, ["test", "tests", "src/test", "src/tests"]):
             if (self.project.directory / test_dir).is_dir():

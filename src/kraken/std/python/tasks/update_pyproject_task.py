@@ -47,7 +47,7 @@ def update_pyproject_task(
         UpdatePyprojectTask,
         group=group,
         settings=python_settings(project),
-        file=project.directory / "pyproject.toml",
+        file="pyproject.toml",
     )
     task.create_check()
     return task

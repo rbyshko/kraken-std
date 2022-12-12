@@ -26,7 +26,7 @@ class BlackTask(EnvironmentAwareDispatchTask):
         if self.check_only.get():
             command += ["--check", "--diff"]
         if self.config_file.is_filled():
-            command += ["--config", str(self.config_file.get())]
+            command += ["--config", str(self.config_file.get().absolute())]
         command += self.additional_args.get()
         return command
 
