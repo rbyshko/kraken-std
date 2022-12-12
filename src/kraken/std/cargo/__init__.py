@@ -179,6 +179,7 @@ def cargo_build(
     mode: Literal["debug", "release"],
     incremental: bool | None = None,
     env: dict[str, str] | None = None,
+    workspace: bool = False,
     *,
     group: str | None = "build",
     name: str | None = None,
@@ -197,6 +198,13 @@ def cargo_build(
     assert mode in ("debug", "release"), repr(mode)
     project = project or Project.current()
     cargo = CargoProject.get_or_create(project)
+
+    additional_args = []
+    if workspace:
+        additional_args.append("--workspace")
+    if mode == "release":
+        additional_args.append("--release")
+
     task = project.do(
         f"cargoBuild{mode.capitalize()}" if name is None else name,
         CargoBuildTask,
@@ -204,7 +212,7 @@ def cargo_build(
         group=group,
         incremental=incremental,
         target=mode,
-        additional_args=["--release"] if mode == "release" else [],
+        additional_args=additional_args,
         env=Supplier.of_callable(lambda: {**cargo.build_env, **(env or {})}),
     )
     task.add_relationship(f":{CARGO_BUILD_SUPPORT_GROUP_NAME}?")
