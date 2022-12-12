@@ -21,7 +21,7 @@ class GitignoreSyncTask(RenderFileTask):
     It's common to group this task under the default `fmt` group, as it is similar to formatting a `.gitignore` file.
     """
 
-    file: Property[Path] = Property.default(".gitignore")
+    file: Property[Path]
     sort_paths: Property[bool] = Property.config(default=True)
     sort_groups: Property[bool] = Property.config(default=False)
 
@@ -30,6 +30,7 @@ class GitignoreSyncTask(RenderFileTask):
     def __init__(self, name: str, project: Project) -> None:
         super().__init__(name, project)
         self._paths = {}
+        self.file.setcallable(lambda: self.project.directory / ".gitignore")
         self.content.setcallable(lambda: self.get_file_contents(self.file.get()))
 
     def add_paths(self, header: str | None, paths: Sequence[str]) -> None:

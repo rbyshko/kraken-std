@@ -20,10 +20,10 @@ class MypyTask(EnvironmentAwareDispatchTask):
         # TODO (@NiklasRosenstein): Should we somewhere add a task that ensures `.dmypy.json` is in `.gitignore`?
         #       Having it in the project directory makes it easier to just stop the daemon if it malfunctions (which
         #       happens regularly but is hard to detect automatically).
-        status_file = self.project.directory / ".dmypy.json"
+        status_file = (self.project.directory / ".dmypy.json").absolute()
         command = ["dmypy", "--status-file", str(status_file), "run", "--"] if self.use_daemon.get() else ["mypy"]
         if self.config_file.is_filled():
-            command += ["--config-file", str(self.config_file.get())]
+            command += ["--config-file", str(self.config_file.get().absolute())]
         else:
             command += ["--show-error-codes", "--namespace-packages"]  # Sane defaults. 🙏
         if self.python_version.is_filled():

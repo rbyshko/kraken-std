@@ -20,7 +20,7 @@ class IsortTask(EnvironmentAwareDispatchTask):
         if self.check_only.get():
             command += ["--check-only", "--diff"]
         if self.config_file.is_filled():
-            command += ["--settings-file", str(self.config_file.get())]
+            command += ["--settings-file", str(self.config_file.get().absolute())]
         return command
 
     # Task
