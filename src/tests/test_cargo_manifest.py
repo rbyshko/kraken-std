@@ -34,6 +34,7 @@ def test_cargo_manifest_handles_unknown_fields_correctly() -> None:
 
 def test_cargo_manifest_writes_json_correctly() -> None:
     input_json = {
+        "members": ["app1", "app2"],
         "package": {
             "name": "test",
             "version": "0.1.2",

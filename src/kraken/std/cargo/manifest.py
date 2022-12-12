@@ -144,7 +144,10 @@ class Workspace:
         )
 
     def to_json(self) -> dict[str, Any]:
-        values = {"package": self.package.to_json() if self.package else None}
+        values = {
+            "package": self.package.to_json() if self.package else None,
+            "members": self.members if self.members else None,
+        }
         if self.unhandled is not None:
             values.update({k: v for k, v in self.unhandled.items() if v is not None})
         return {k: v for k, v in values.items() if v is not None}

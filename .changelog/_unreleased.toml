@@ -1,4 +1,10 @@
 [[entries]]
+id = "74349729-bbf6-43b4-bc55-26aea7ba79bc"
+type = "fix"
+description = "Fix preserve workspace_memebers in cargo manifest"
+author = "callumPearce"
+
+[[entries]]
 id = "91196d66-d55b-4e2c-85bb-fd16bfb236fc"
 type = "fix"
 description = "Have `PythonSettings.get_tests_directory()` return it only if it exists"
@@ -15,3 +21,4 @@ id = "4bb0d5bc-4675-41cd-8196-add8ac923664"
 type = "fix"
 description = "fix specifying the path to `pyproject.toml` in the `UpdatePyprojectTask` to be a path relative to the project directory"
 author = "@NiklasRosenstein"
+
