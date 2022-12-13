@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import subprocess
 from dataclasses import dataclass, fields
 from enum import Enum
@@ -12,6 +13,8 @@ from typing import Any, List
 import tomli
 import tomli_w
 from pydantic import ClassError
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -60,11 +63,21 @@ class CargoMetadata:
 
     @classmethod
     def read(cls, project_dir: Path) -> CargoMetadata:
-        result = subprocess.run(
-            ["cargo", "metadata", "--no-deps", "--format-version=1", "--manifest-path", project_dir / "Cargo.toml"],
-            stdout=subprocess.PIPE,
-        )
-        return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
+        cmd = [
+            "cargo",
+            "metadata",
+            "--no-deps",
+            "--format-version=1",
+            "--manifest-path",
+            str(project_dir / "Cargo.toml"),
+        ]
+        result = subprocess.run(cmd, stdout=subprocess.PIPE)
+        if result.returncode == 0:
+            logger.warning(f"Could not execute `{' '.join(cmd)}`, please see logs.")
+            logger.warning("If this is your first run of kraken, you may need to execute :cargoSyncConfig first.")
+            return cls.of(project_dir, {"packages": []})
+        else:
+            return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
 
     @classmethod
     def of(cls, path: Path, data: dict[str, Any]) -> CargoMetadata:

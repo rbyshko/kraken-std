@@ -14,8 +14,7 @@ from ..config import CargoRegistry
 class CargoSyncConfigTask(RenderFileTask):
     """This task updates the `.cargo/config.toml` file to inject configuration values."""
 
-    # Override the default value of the :attr:`RenderFileTask.file`.
-    file: Property[Path] = Property.default(".cargo/config.toml")
+    file: Property[Path]
 
     #: If enabled, the configuration file will be replaced rather than updated.
     replace: Property[bool] = Property.config(default=False)
@@ -28,6 +27,7 @@ class CargoSyncConfigTask(RenderFileTask):
 
     def __init__(self, name: str, project: Project) -> None:
         super().__init__(name, project)
+        self.file.setcallable(lambda: project.directory / ".cargo" / "config.toml")
         self.content.setcallable(lambda: self.get_file_contents(self.file.get()))
 
     def get_file_contents(self, file: Path) -> str | bytes:
