@@ -1,0 +1,5 @@
+[[entries]]
+id = "a5379000-c1ea-4fe0-90b5-02d7488e88b7"
+type = "fix"
+description = "Don't use dataclass for enum as it breaks equality checks"
+author = "@tetigi"

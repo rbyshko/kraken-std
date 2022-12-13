@@ -26,7 +26,6 @@ class Bin:
 # TODO: Differentiate between lib kinds?
 
 
-@dataclass
 class ArtifactKind(Enum):
     BIN = 1
     LIB = 2
