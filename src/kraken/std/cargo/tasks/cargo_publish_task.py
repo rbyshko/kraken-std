@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from kraken.common import not_none
 from kraken.core import Project, Property
@@ -16,6 +16,9 @@ class CargoPublishTask(CargoBuildTask):
 
     #: Path to the Cargo configuration file (defaults to `.cargo/config.toml`).
     cargo_config_file: Property[Path] = Property.default(".cargo/config.toml")
+
+    #: Name of the package to publish (only requried for publishing packages from workspace)
+    package_name: Property[Optional[str]] = Property.default(None)
 
     #: The registry to publish the package to.
     registry: Property[CargoRegistry]
@@ -37,6 +40,9 @@ class CargoPublishTask(CargoBuildTask):
             + ["--registry", registry.alias, "--token", registry.publish_token]
             + ([] if self.verify.get() else ["--no-verify"])
         )
+        package_name = self.package_name.get()
+        if package_name is not None:
+            command += ["--package", package_name]
         if self.allow_dirty.get() and "--allow-dirty" not in command:
             command.append("--allow-dirty")
         return command

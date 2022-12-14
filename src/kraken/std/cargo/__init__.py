@@ -255,6 +255,7 @@ def cargo_publish(
     verify: bool = True,
     additional_args: Sequence[str] = (),
     name: str = "cargoPublish",
+    package_name: str | None = None,
     project: Project | None = None,
 ) -> CargoPublishTask:
     """Creates a task that publishes the create to the specified *registry*.
@@ -271,7 +272,7 @@ def cargo_publish(
     cargo = CargoProject.get_or_create(project)
 
     task = project.do(
-        name,
+        f"{name}/{package_name}" if package_name is not None else name,
         CargoPublishTask,
         False,
         group="publish",
@@ -280,6 +281,7 @@ def cargo_publish(
         allow_dirty=True,
         incremental=incremental,
         verify=verify,
+        package_name=package_name,
         env=Supplier.of_callable(lambda: {**cargo.build_env, **(env or {})}),
     )
 
