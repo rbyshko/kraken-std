@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from urllib.parse import quote
 
-from kraken.core.util.helpers import NotSet
+from kraken.common import NotSet
 
 from kraken.std.python.buildsystem.poetry import PoetryPythonBuildSystem
 from kraken.std.python.pyproject import Pyproject

@@ -5,8 +5,8 @@ import shlex
 from pathlib import Path
 from typing import Any, List
 
+from kraken.common import flatten
 from kraken.core import Project, Property, TaskStatus
-from kraken.core.util.helpers import flatten
 
 from .base_task import EnvironmentAwareDispatchTask
 

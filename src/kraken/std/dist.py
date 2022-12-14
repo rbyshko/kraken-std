@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Any, List, Mapping, Optional, Sequence, Union, cast
 
 import databind.json
+from kraken.common import flatten
 from kraken.core import Project, Property, Task
-from kraken.core.util.helpers import flatten
 from termcolor import colored
 from typing_extensions import Literal
 

@@ -1,6 +1,8 @@
-# ::requirements kraken-std@.
-
 from __future__ import annotations
+
+from kraken.common import buildscript
+
+buildscript(requirements=["kraken-std@."])
 
 import os
 

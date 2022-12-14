@@ -5,8 +5,8 @@ import re
 import subprocess as sp
 from pathlib import Path
 
+from kraken.common import flatten, not_none
 from kraken.core import Project, TaskStatus
-from kraken.core.util.helpers import flatten, not_none
 
 from kraken.std.docker.util import update_run_commands
 

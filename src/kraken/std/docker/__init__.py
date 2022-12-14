@@ -3,9 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from kraken.common import import_class
 from kraken.core import Project, Property, Supplier, Task
 from kraken.core.lib.render_file_task import RenderFileTask, render_file
-from kraken.core.util.importing import import_class
 
 from .util import render_docker_auth
 

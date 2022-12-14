@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Sequence
 
 import deprecated
+from kraken.common import flatten
 from kraken.core.project import Project
 from kraken.core.property import Property
-from kraken.core.util.helpers import flatten
 
 from . import DockerBuildTask
 from .dockerapi import docker_load, docker_run

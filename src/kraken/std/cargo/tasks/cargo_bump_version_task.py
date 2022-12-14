@@ -3,8 +3,8 @@ from __future__ import annotations
 import contextlib
 from pathlib import Path
 
+from kraken.common import atomic_file_swap
 from kraken.core import BackgroundTask, Property, TaskStatus
-from kraken.core.util.fs import atomic_file_swap
 
 from kraken.std.cargo import CargoProject
 from kraken.std.cargo.manifest import CargoManifest

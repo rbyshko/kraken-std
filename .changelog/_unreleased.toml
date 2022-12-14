@@ -1,0 +1,5 @@
+[[entries]]
+id = "fa4b0c52-293b-4ae3-9e43-2cd560b48686"
+type = "improvement"
+description = "migrate to kraken-core 0.11.0 and kraken-common 0.4.0"
+author = "@NiklasRosenstein"

@@ -6,8 +6,8 @@ import os
 import subprocess as sp
 from typing import Iterable, MutableMapping
 
+from kraken.common.pyenv import VirtualEnvInfo, get_current_venv
 from kraken.core import Project, Task, TaskRelationship, TaskStatus
-from nr.python.environment.virtualenv import VirtualEnvInfo, get_current_venv
 
 from kraken.std.python.buildsystem import ManagedEnvironment
 
