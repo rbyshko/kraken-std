@@ -72,7 +72,7 @@ class CargoMetadata:
             str(project_dir / "Cargo.toml"),
         ]
         result = subprocess.run(cmd, stdout=subprocess.PIPE)
-        if result.returncode == 0:
+        if result.returncode != 0:
             logger.warning(f"Could not execute `{' '.join(cmd)}`, please see logs.")
             logger.warning("If this is your first run of kraken, you may need to execute :cargoSyncConfig first.")
             return cls.of(project_dir, {"packages": []})
