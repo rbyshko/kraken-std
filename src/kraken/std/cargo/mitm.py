@@ -1,5 +1,7 @@
-""" Implements a MITM proxy server using the :mod:`proxy` (`proxy.py` on PyPI) module to inject the auth credentials
-into Cargo and Git HTTP(S) requests. """
+"""
+Implements a MITM proxy server using the :mod:`proxy` (`proxy.py` on PyPI) module to inject the auth credentials
+into Cargo and Git HTTP(S) requests.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +9,7 @@ import contextlib
 import json
 import logging
 import os
+import shutil
 import subprocess as sp
 from pathlib import Path
 from typing import Iterator
@@ -31,8 +34,18 @@ def mitm_auth_proxy(
 
     env = os.environ.copy()
     env["PYTHONPATH"] = str(Path(__file__).parent) + os.pathsep + env.get("PYTHONPATH", "")
+
+    # Find the proxy command.
+    proxy_cmd = shutil.which("proxy")
+    if not proxy_cmd:
+        raise FileNotFoundError(
+            "The `proxy` command could not be found. Usually it is automatically available when using kraken-wrapper. "
+            "If you are running on a kraken-wrapper version before 0.2.2, please upgrade. As an alternative, but less "
+            "recommended workaround, you can run `pipx install proxy.py` followed by `pipx inject proxy.py certifi`."
+        )
+
     command = [
-        "proxy",
+        proxy_cmd,
         "--plugins",
         "mitm_impl.AuthInjector",
         "--ca-key-file",
