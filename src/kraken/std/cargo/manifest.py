@@ -75,6 +75,7 @@ class CargoMetadata:
         if result.returncode != 0:
             logger.warning(f"Could not execute `{' '.join(cmd)}`, please see logs.")
             logger.warning("If this is your first run of kraken, you may need to execute :cargoSyncConfig first.")
+            logger.warning("Stderr: %s", result.stderr)
             return cls.of(project_dir, {"packages": []})
         else:
             return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
