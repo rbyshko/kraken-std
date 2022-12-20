@@ -5,7 +5,8 @@ import os
 from typing import Optional, Union, cast
 
 from kraken.common.pyenv import get_current_venv
-from kraken.core import Project, Property, Supplier, Task, TaskStatus
+from kraken.core.api import Project, Property, Task, TaskStatus
+from nr.stream import Supplier
 
 from ..buildsystem import PythonBuildSystem
 from ..settings import python_settings

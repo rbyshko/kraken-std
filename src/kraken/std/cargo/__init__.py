@@ -5,7 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Sequence
 
-from kraken.core import Project, Supplier
+from kraken.core.api import Project
+from nr.stream import Supplier
 from typing_extensions import Literal
 
 from .config import CargoProject, CargoRegistry

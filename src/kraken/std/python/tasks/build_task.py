@@ -4,7 +4,8 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from kraken.core import Project, Property, Supplier, Task, TaskStatus
+from kraken.core.api import Project, Property, Task, TaskStatus
+from nr.stream import Supplier
 
 from ..buildsystem import PythonBuildSystem
 from ..settings import python_settings

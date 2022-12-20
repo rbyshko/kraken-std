@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Optional, Sequence, cast
 
-from kraken.core import Project
+from kraken.core.api import Project
 
 from .tasks.gitignore_sync_task import GitignoreSyncTask
 from .version import GitVersion, git_describe

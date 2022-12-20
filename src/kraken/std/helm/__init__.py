@@ -7,7 +7,8 @@ import urllib.parse
 from pathlib import Path
 
 import httpx
-from kraken.core import Project, Property, Supplier, Task, TaskStatus
+from kraken.core.api import Project, Property, Task, TaskStatus
+from nr.stream import Supplier
 
 from . import helmapi
 

@@ -6,9 +6,7 @@ import tempfile
 from pathlib import Path
 
 from kraken.common import flatten, not_none
-from kraken.core.project import Project
-from kraken.core.property import Property
-from kraken.core.task import TaskStatus
+from kraken.core.api import Project, Property, TaskStatus
 
 from kraken.std.docker.util import update_run_commands
 

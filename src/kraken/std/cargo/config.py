@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from kraken.core import Project
+from kraken.core.api import Project
 
 
 @dataclasses.dataclass

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 from kraken.common import not_none
-from kraken.core import Context
+from kraken.core.api import Context
 
 from tests.utils.docker import DockerServiceManager
 

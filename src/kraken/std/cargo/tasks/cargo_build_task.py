@@ -6,7 +6,7 @@ import subprocess as sp
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
-from kraken.core import Project, Property, Task, TaskStatus
+from kraken.core.api import Project, Property, Task, TaskStatus
 
 from kraken.std.cargo.manifest import ArtifactKind, CargoMetadata
 from kraken.std.descriptors.resource import BinaryArtifact, LibraryArtifact
