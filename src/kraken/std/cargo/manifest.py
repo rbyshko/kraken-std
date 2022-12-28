@@ -60,6 +60,7 @@ class CargoMetadata:
 
     workspaceMembers: list[WorkspaceMember]
     artifacts: list[Artifact]
+    target_directory: Path
 
     @classmethod
     def read(cls, project_dir: Path) -> CargoMetadata:
@@ -98,7 +99,7 @@ class CargoMetadata:
                     elif "lib" in target["kind"]:
                         artifacts.append(Artifact(target["name"], target["src_path"], ArtifactKind.LIB))
 
-        return cls(path, data, workspace_members, artifacts)
+        return cls(path, data, workspace_members, artifacts, Path(data["target_directory"]))
 
 
 @dataclass

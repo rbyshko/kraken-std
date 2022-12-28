@@ -9,6 +9,7 @@ from typing import List
 
 from kraken.std.python.settings import PythonSettings
 
+from ...cargo.manifest import CargoMetadata
 from . import ManagedEnvironment
 from .poetry import PoetryManagedEnvironment, PoetryPythonBuildSystem
 
@@ -37,7 +38,8 @@ class MaturinPythonBuildSystem(PoetryPythonBuildSystem):
         return ["poetry", "run", "maturin", "build", "--release"]
 
     def dist_dir(self) -> Path:
-        return self.project_directory / "target" / "wheels"
+        metadata = CargoMetadata.read(self.project_directory)
+        return metadata.target_directory / "wheels"
 
 
 class MaturinManagedEnvironment(PoetryManagedEnvironment):
