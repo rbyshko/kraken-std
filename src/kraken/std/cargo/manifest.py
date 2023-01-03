@@ -74,10 +74,21 @@ class CargoMetadata:
         ]
         result = subprocess.run(cmd, stdout=subprocess.PIPE)
         if result.returncode != 0:
-            logger.warning(f"Could not execute `{' '.join(cmd)}`, please see logs.")
-            logger.warning("If this is your first run of kraken, you may need to execute :cargoSyncConfig first.")
-            logger.warning("Stderr: %s", result.stderr)
-            return cls.of(project_dir, {"packages": []})
+            logger.error("Stderr: %s", result.stderr)
+            logger.error(f"Could not execute `{' '.join(cmd)}`, and thus can't read the cargo metadata.")
+            logger.error(
+                "This is due to a malformed Cargo setup, possibly due to missing registries in the config.toml."
+                "See https://github.com/kraken-build/kraken-std/pull/59 for more details."
+            )
+            logger.error(
+                "This is a known deficiency of Kraken currently - to proceed, you must comment out "
+                "non-default registry imports that you have added in your Cargo.toml files, run "
+                "`krakenw run :cargoSyncConfig`, and then uncomment them again."
+            )
+            logger.error(
+                "If you continue to have this error after performing the above, you may have unrelated Cargo issues"
+            )
+            raise RuntimeError("Could not read cargo metadata. Please see logs for instructions.")
         else:
             return cls.of(project_dir, json.loads(result.stdout.decode("utf-8")))
 
