@@ -44,7 +44,7 @@ class MaturinPythonBuildSystem(PoetryPythonBuildSystem):
 
 class MaturinManagedEnvironment(PoetryManagedEnvironment):
     def install(self, settings: PythonSettings) -> None:
-        super(MaturinManagedEnvironment, self).install(settings)
+        super().install(settings)
         command = ["poetry", "run", "maturin", "develop"]
         logger.info("%s", command)
         sp.check_call(command, cwd=self.project_directory)

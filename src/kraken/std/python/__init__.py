@@ -9,6 +9,7 @@ from .tasks.mypy_task import MypyTask, mypy
 from .tasks.publish_task import PublishTask, publish
 from .tasks.pylint_task import PylintTask, pylint
 from .tasks.pytest_task import PytestTask, pytest
+from .tasks.pyupgrade_task import PyUpgradeCheckTask, PyUpgradeTask, pyupgrade
 from .tasks.update_pyproject_task import update_pyproject_task
 
 # Backwards compatibilty
@@ -38,5 +39,8 @@ __all__ = [
     "PytestTask",
     "python_settings",
     "PythonSettings",
+    "pyupgrade",
+    "PyUpgradeTask",
+    "PyUpgradeCheckTask",
     "update_pyproject_task",
 ]

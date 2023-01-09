@@ -13,6 +13,7 @@ __Supported tools__
 * Mypy
 * Pylint
 * Pytest
+* Pyupgrade
 
 __Supported build systems (for installing/building)__
 
@@ -88,6 +89,14 @@ Independent of the Python build system used, Kraken will use [Twine][] to publis
 @pydoc kraken.std.python.tasks.pytest.PytestTask
 
 @pydoc kraken.std.python.tasks.pytest.pytest
+
+### Pyupgrade
+
+@pydoc kraken.std.python.tasks.pyupgrade.PyUpgradeTask
+
+@pydoc kraken.std.python.tasks.pyupgrade.PyUpgradeCheckTask
+
+@pydoc kraken.std.python.tasks.pyupgrade.pyupgrade
 
 __Environment variables__
 

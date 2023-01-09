@@ -3,3 +3,9 @@ id = "3eddc7dc-a9d5-4b5d-824a-b5587b1e7981"
 type = "improvement"
 description = "Bump cargo version just before publish"
 author = "callumPearce"
+
+[[entries]]
+id = "ccf16097-0205-43be-923a-d5f26375ff4e"
+type = "feature"
+description = "Add pyupgrade tasks"
+author = "@Tpt"
