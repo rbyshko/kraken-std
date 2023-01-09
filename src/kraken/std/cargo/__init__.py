@@ -43,6 +43,9 @@ __all__ = [
 #: or establish pre-requisites for a Cargo build to be executed. This includes ensuring certain configuration is
 #: is up to date and the Cargo auth proxy if it is being used.
 CARGO_BUILD_SUPPORT_GROUP_NAME = "cargoBuildSupport"
+#: This is the name of a group in every project that are pre-requisites for publishing crates within a Cargo workspace.
+#: This includes ensuring that all path dependencies have up to date version numbers.
+CARGO_PUBLISH_SUPPORT_GROUP_NAME = "cargoPublishSupport"
 
 
 def cargo_registry(
@@ -85,6 +88,9 @@ def cargo_auth_proxy(*, project: Project | None = None) -> CargoAuthProxyTask:
         group=CARGO_BUILD_SUPPORT_GROUP_NAME,
         registries=Supplier.of_callable(lambda: list(cargo.registries.values())),
     )
+    # The auth proxy is required for both building and publishing cargo packages with private cargo project dependencies
+    project.group(CARGO_PUBLISH_SUPPORT_GROUP_NAME).add(task)
+
     # The auth proxy injects values into the cargo config, the cargoSyncConfig.check ensures that it reflects
     # the temporary changes that should be made to the config. The check has to run before the auth proxy,
     # otheerwise it is garuanteed to fail.
@@ -145,7 +151,7 @@ def cargo_bump_version(
     version: str,
     revert: bool = True,
     name: str = "cargoBumpVersion",
-    group: str | None = CARGO_BUILD_SUPPORT_GROUP_NAME,
+    group: str | None = CARGO_PUBLISH_SUPPORT_GROUP_NAME,
     registry: str | None = None,
     project: Project | None = None,
     cargo_toml_file: Path = Path("Cargo.toml"),
@@ -170,8 +176,7 @@ def cargo_bump_version(
         cargo_toml_file=cargo_toml_file,
     )
 
-    if project.parent is not None:
-        task.add_relationship(f":{CARGO_BUILD_SUPPORT_GROUP_NAME}", inverse=True)
+    task.add_relationship(":test?")
 
     return task
 
@@ -286,6 +291,6 @@ def cargo_publish(
         env=Supplier.of_callable(lambda: {**cargo.build_env, **(env or {})}),
     )
 
-    task.add_relationship(f":{CARGO_BUILD_SUPPORT_GROUP_NAME}?")
+    task.add_relationship(f":{CARGO_PUBLISH_SUPPORT_GROUP_NAME}?")
 
     return task

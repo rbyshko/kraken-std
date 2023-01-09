@@ -1,0 +1,5 @@
+[[entries]]
+id = "3eddc7dc-a9d5-4b5d-824a-b5587b1e7981"
+type = "improvement"
+description = "Bump cargo version just before publish"
+author = "callumPearce"
