@@ -9,3 +9,9 @@ id = "ccf16097-0205-43be-923a-d5f26375ff4e"
 type = "feature"
 description = "Add pyupgrade tasks"
 author = "@Tpt"
+
+[[entries]]
+id = "91e4ece6-4a36-439a-b14d-15d1a36b74af"
+type = "fix"
+description = "Fix: don't use metadata in semver for cargo, squash it into the dev version"
+author = "@tetigi"

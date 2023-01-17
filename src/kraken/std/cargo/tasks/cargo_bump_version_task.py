@@ -25,17 +25,20 @@ class CargoBumpVersionTask(BackgroundTask):
         if manifest.package is None:
             return manifest.to_toml_string()
 
-        manifest.package.version = self.version.get()
+        # Cargo does not play nicely with semver metadata (ie. 1.0.1-dev3+abc123)
+        # We replace that to 1.0.1-dev3abc123
+        fixed_version_string = self.version.get().replace("+", "")
+        manifest.package.version = fixed_version_string
         if manifest.workspace and manifest.workspace.package:
             manifest.workspace.package.version = self.version.get()
 
         if self.registry.is_filled():
             cargo = CargoProject.get_or_create(self.project)
             registry = cargo.registries[self.registry.get()]
-            self._push_version_to_path_deps(manifest, registry.alias)
+            self._push_version_to_path_deps(fixed_version_string, manifest, registry.alias)
         return manifest.to_toml_string()
 
-    def _push_version_to_path_deps(self, manifest: CargoManifest, registry_alias: str) -> None:
+    def _push_version_to_path_deps(self, version_string: str, manifest: CargoManifest, registry_alias: str) -> None:
         """For each dependency in the given manifest, if the dependency is a `path` dependency, injects the current
         version and registry (required for publishing - path dependencies cannot be published alone)."""
         if manifest.dependencies:
@@ -44,7 +47,7 @@ class CargoBumpVersionTask(BackgroundTask):
                 dependency = dependencies[dep_name]
                 if isinstance(dependency, dict):
                     if "path" in dependency:
-                        dependency["version"] = self.version.get()
+                        dependency["version"] = f"={version_string}"
                         dependency["registry"] = registry_alias
 
     # BackgroundTask
