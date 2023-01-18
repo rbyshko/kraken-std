@@ -259,6 +259,7 @@ def cargo_publish(
     env: dict[str, str] | None = None,
     *,
     verify: bool = True,
+    retry_attempts: int = 0,
     additional_args: Sequence[str] = (),
     name: str = "cargoPublish",
     package_name: str | None = None,
@@ -272,6 +273,8 @@ def cargo_publish(
     :param verify: If this is enabled, the `cargo publish` task will build the crate after it is packaged.
         Disabling this just packages the crate and publishes it. Only if this is enabled will the created
         task depend on the auth proxy.
+    :param retry_attempts: Retry the publish task if it fails, up to a maximum number of attempts. Sometimes
+        cargo publishes can be flakey depending on the destination. Defaults to 0 retries.
     """
 
     project = project or Project.current()
@@ -287,6 +290,7 @@ def cargo_publish(
         allow_dirty=True,
         incremental=incremental,
         verify=verify,
+        retry_attempts=retry_attempts,
         package_name=package_name,
         env=Supplier.of_callable(lambda: {**cargo.build_env, **(env or {})}),
     )

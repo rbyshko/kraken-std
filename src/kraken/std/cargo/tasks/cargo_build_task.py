@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import shlex
 import subprocess as sp
+import time
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
@@ -38,6 +39,9 @@ class CargoBuildTask(Task):
 
     #: Environment variables for the Cargo command.
     env: Property[Dict[str, str]] = Property.default_factory(dict)
+
+    #: Number of times to retry before failing this job
+    retry_attempts: Property[int] = Property.default(0)
 
     #: An output property for the Cargo binaries that are being produced by this build.
     out_binaries: Property[List[CargoBinaryArtifact]] = Property.output()
@@ -93,12 +97,23 @@ class CargoBuildTask(Task):
         self.out_binaries.set(out_binaries)
         self.out_libraries.set(out_libraries)
 
-        result = sp.call(command, cwd=self.project.directory, env={**os.environ, **env})
+        total_attempts = self.retry_attempts.get() + 1
 
-        if result == 0:
-            for out_bin in out_binaries:
-                assert out_bin.path.is_file(), out_bin
-            for out_lib in out_libraries:
-                assert out_lib.path.is_file(), out_lib
+        while total_attempts > 0:
+            result = sp.call(command, cwd=self.project.directory, env={**os.environ, **env})
+
+            if result == 0:
+                for out_bin in out_binaries:
+                    assert out_bin.path.is_file(), out_bin
+                for out_lib in out_libraries:
+                    assert out_lib.path.is_file(), out_lib
+                break
+            else:
+                total_attempts -= 1
+                self.logger.warn("%s failed with result %s", safe_command, result)
+                self.logger.warn("There are %s attempts remaining", total_attempts)
+                if total_attempts > 0:
+                    self.logger.info("Waiting for 10 seconds before retrying..")
+                    time.sleep(10)
 
         return TaskStatus.from_exit_code(safe_command, result)
