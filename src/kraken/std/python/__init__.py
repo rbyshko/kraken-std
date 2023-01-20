@@ -5,6 +5,7 @@ from .tasks.flake8_task import Flake8Task, flake8
 from .tasks.install_task import InstallTask, install
 from .tasks.isort_task import IsortTask, isort
 from .tasks.login_task import login
+from .tasks.mypy_subtest_task import MypyStubtestTask, mypy_subtest
 from .tasks.mypy_task import MypyTask, mypy
 from .tasks.publish_task import PublishTask, publish
 from .tasks.pylint_task import PylintTask, pylint
@@ -31,6 +32,8 @@ __all__ = [
     "login",
     "mypy",
     "MypyTask",
+    "mypy_subtest",
+    "MypyStubtestTask",
     "publish",
     "PublishTask",
     "pylint",
