@@ -18,3 +18,6 @@ id = "9d7eaf80-bb99-40b1-be56-ca9e5cf2901c"
 type = "fix"
 description = "fix Python project installation with Slap if the environment already exists"
 author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/kraken-build/kraken-std/issues/65",
+]
