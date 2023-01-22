@@ -3,3 +3,12 @@ id = "1648a819-292f-4dbf-a3dc-5f45cc4e0c63"
 type = "feature"
 description = "Feature: Add a task for mypy.stubtest"
 author = "@Tpt"
+
+[[entries]]
+id = "e8714b02-17d0-4edc-a7e0-b8af7780a6ba"
+type = "fix"
+description = "set `PythonSettings.always_use_managed_env=True` by default, which should fix #63 as it ensures the Virtual environment PATH parts are at the front"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/kraken-build/kraken-std/issues/63",
+]

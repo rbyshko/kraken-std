@@ -31,7 +31,7 @@ class PythonSettings:
     source_directory: Path = Path("src")
     tests_directory: Path | None = None
     package_indexes: dict[str, PythonIndex] = dataclasses.field(default_factory=dict)
-    always_use_managed_env: bool = False
+    always_use_managed_env: bool = True
 
     def get_tests_directory(self) -> Path | None:
         """Returns :attr:`tests_directory` if it is set. If not, it will look for the following directories and
