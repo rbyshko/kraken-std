@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Sequence
+from typing import Collection, Sequence
 
 from kraken.core.api import Project
 from nr.stream import Supplier
@@ -187,6 +187,7 @@ def cargo_build(
     env: dict[str, str] | None = None,
     workspace: bool = False,
     *,
+    exclude: Collection[str] = (),
     group: str | None = "build",
     name: str | None = None,
     project: Project | None = None,
@@ -198,6 +199,7 @@ def cargo_build(
         specified, the option is not specified and the default behaviour is used.
     :param env: Override variables for the build environment variables. Values in this dictionary override
         variables in :attr:`CargoProject.build_env`.
+    :param exclude: List of workspace crates to exclude from the build.
     :param name: The name of the task. If not specified, defaults to `:cargoBuild{mode.capitalised()}`.
     :param version: Bump the Cargo.toml version temporarily while building to the given version."""
 
@@ -208,6 +210,9 @@ def cargo_build(
     additional_args = []
     if workspace:
         additional_args.append("--workspace")
+    for crate in exclude:
+        additional_args.append("--exclude")
+        additional_args.append(crate)
     if mode == "release":
         additional_args.append("--release")
 
