@@ -11,12 +11,7 @@ from .tasks.gitignore_sync_task import GitignoreSyncTask
 from .tasks.important_file_check_task import ImportantFileCheckTask
 from .version import GitVersion, git_describe
 
-__all__ = [
-    "git_describe",
-    "GitVersion",
-    "GitignoreSyncTask",
-    "gitignore",
-]
+__all__ = ["git_describe", "GitVersion", "GitignoreSyncTask", "gitignore", "validate_exists_and_committed"]
 
 GITIGNORE_TASK_NAME = "gitignore"
 
